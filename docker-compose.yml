@@ -1,0 +1,33 @@
+version: "3"
+services:
+  spring-mysql-crud:
+    container_name: spring-mysql-container-2
+    image: spring-mysql-image-2
+    restart: always
+    build: .
+    ports:
+      - "9090:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: secret
+    depends_on:
+      - mysql
+    networks:
+      - spring-mysql-crud-network
+  mysql:
+    container_name: 'guide-mysql'
+    image: 'mysql:5.7'
+    environment:
+      - 'MYSQL_DATABASE=mydatabase'
+      - 'MYSQL_PASSWORD=secret'
+      - 'MYSQL_ROOT_PASSWORD=verysecret'
+      - 'MYSQL_USER=myuser'
+    ports:
+      - '3306:3306'
+    networks:
+      - spring-mysql-crud-network
+
+networks:
+  spring-mysql-crud-network:
+    driver: bridge
